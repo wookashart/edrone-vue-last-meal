@@ -10,7 +10,7 @@
         <label for="search">
           <i class="fas fa-search"></i>
         </label>
-        <input name="search" id="search" placeholder="SEARCH" />
+        <input name="search" id="search" placeholder="SEARCH" v-model="searchValue" @input="handleInput" />
       </div>
       <div class="favourites-bar">
         <div>
@@ -23,9 +23,32 @@
 </template>
 
 <script>
-export default {
+  import axios from 'axios';
+  import debounce from 'lodash.debounce';
 
-}
+  const API = 'https://www.themealdb.com/api/json/v1/1/search.php';
+
+  export default {
+    name: 'Navigation',
+    data() {
+      return {
+        searchValue: '',
+        results: [],
+      }
+    },
+    methods: {
+      handleInput: debounce(function() {
+        axios.get(`${API}?s=${this.searchValue}`)
+          .then(response => {
+            // this.results = response.data.collection.items;
+            console.log(response);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }, 500)
+    },
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -95,4 +118,3 @@ export default {
     }
   }
 </style>
-

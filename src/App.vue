@@ -15,6 +15,11 @@
     font-size: 10px;
   }
 
+  h3 {
+    font-size: 2.2rem;
+    margin: 0;
+  }
+
   .content {
     max-width: 1400px;
     margin: auto;
