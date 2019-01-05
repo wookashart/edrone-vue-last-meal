@@ -29,8 +29,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import '../styles/colors';
+
   .navigationWrapper {
-    background-color: #FFFF8D;
+    background-color: $yellow;
     padding: 5px 0;
   }
 
@@ -40,7 +42,8 @@ export default {
 
   .hamburger-bar {
     flex: 1;
-    font-size: 3rem;
+    font-size: 2.8rem;
+    padding: 0 15px;
   }
 
   .search-bar {
@@ -48,20 +51,48 @@ export default {
     align-self: center;
     text-align: center;
     font-size: 2rem;
+    padding: 0 15px;
 
     label {
-      color: #2D2D0F;
-      border: 1px solid #2D2D0F;
+      color: $gray;
+      border: 1px solid $gray;
       border-right: 0;
+      padding: 3px 10px 2px 7px;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 4px 0 0 4px;
     }
 
     input {
-      
+      height: 30px;
+      width: calc(100% - 38px);
+      border: 1px solid $gray;
+      border-left: 0;
+      background: transparent;
+      outline: none;
+      border-radius: 0 4px 4px 0;
     }
   }
 
   .favourites-bar {
     flex: 1;
+    padding: 0 15px;
+
+    > div {
+      width: 100%;
+      border: 1px solid $gray;
+      border-radius: 4px;
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      color: $gray;
+      padding: 5px;
+      text-align: center;
+      cursor: pointer;
+
+      span {
+        margin: 0 5px;
+      }
+    }
   }
 </style>
 
