@@ -12,6 +12,9 @@
             </div>
           </div>
         </li>
+          <!-- <component v-bind:is="component" :selectedMeal="selectedMeal"></component> -->
+        
+        <!-- <MealDetail :selectedMeal="selectedMeal" /> -->
       </ul>
     </div>
   </div>
@@ -19,6 +22,7 @@
 
 <script>
   import axios from 'axios';
+  import MealDetail from '@/components/MealDetail';
 
   const findByIdAPI = 'https://www.themealdb.com/api/json/v1/1/lookup.php';
 
@@ -29,6 +33,8 @@
         searchValue: '',
         mealDetail: {},
         boxClicked: false,
+        selectedMeal: {},
+        component: undefined,
       }
     },
     props: {
@@ -37,65 +43,68 @@
         required: true,
       }
     },
+    components: {
+      MealDetail,
+    },
     methods: {
       showDetail: function(id, index) {
-        const box = document.createElement('div');
         const boxList = [...document.querySelectorAll('.item-list li')];
         const infoBoxPosition = Math.ceil((index + 1) / 3) * 3;
+        const allIngredients = [];
+        const allMeasure = [];
 
         axios.get(`${findByIdAPI}?i=${id}`)
           .then(response => {
             const allBoxes = [...document.querySelectorAll('.thumb-box')];
             const youtubeUrl = this.results[index].strYoutube !== "" ? new URL(this.results[index].strYoutube) : null;
             const videoNumber = youtubeUrl !== null ? youtubeUrl.searchParams.get("v") : null;
-            const template = `
-              <div>
-                <div>
-                  ${videoNumber !== null
-                    ? `<iframe width="350" height="200" src="https://www.youtube.com/embed/${videoNumber}" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>` 
-                    : `<img src="${this.results[index].strMealThumb}" />`}
-                </div>
-                <div>
-                  <h3>Instruction</h3>
-                  <p>${this.results[index].strInstructions}</p>
-                  <h3>Ingredients + Measure</h3>
-                  <ul>
-                    <li>
-                      <span>${this.results[index].strIngredient1}</span>
-                      <span> - </span>
-                      <span>${this.results[index].strMeasure1}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            `
-            box.innerHTML = template;
 
-            console.log(this.results[index]);
+            
 
-            if (document.querySelector('.information')) {
-              document.querySelector('.information').remove();
-              boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
-              document.querySelector('.item-list > div').classList.add('information');
-            } else {
-              boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
-              document.querySelector('.item-list > div').classList.add('information');
+            this.selectedMeal = this.results[index];
+            this.selectedMeal.youtubeCode = videoNumber;
+
+            for (let key in this.selectedMeal) {
+              if (!key.search('strIngredient') && this.selectedMeal[key] !== "") {
+                allIngredients.push(this.selectedMeal[key]);
+              }
+
+              if(!key.search('strMeasure') && this.selectedMeal[key] !== "") {
+                allMeasure.push(this.selectedMeal[key]);
+              }
             }
+
+            this.selectedMeal.ingredients = allIngredients;
+            this.selectedMeal.measure = allMeasure;
+
+            // if (document.querySelector('.information')) {
+            //   document.querySelector('.information').remove();
+            //   boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
+            //   document.querySelector('.item-list > div').classList.add('information');
+            // } else {
+            //   boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
+            //   document.querySelector('.item-list > div').classList.add('information');
+            // }
             
 
             // this.mealDetail = response.data.meals[0];
             // this.boxClicked = !this.boxClicked;
 
             // if (this.boxClicked) {
-              allBoxes.map(box => {
-                box.style.opacity = "0.5";
-              })
-              document.getElementsByClassName(id)[0].style.opacity = "1";
+              // allBoxes.map(box => {
+              //   box.style.opacity = "0.5";
+              // })
+              // document.getElementsByClassName(id)[0].style.opacity = "1";
             // } else {
             //   allBoxes.map(box => {
             //     box.style.opacity = "1";
             //   })
             // }
+
+            
+
+            
+            
           })
           .catch(err => {
             console.log(err);
