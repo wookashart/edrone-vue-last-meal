@@ -1,23 +1,26 @@
 <template>
-  <div class="information">
-    <div v-if="this.selectedMeal.youtubeCode !== null">
-      <iframe width="300" height="300" :src="'https://www.youtube.com/embed/' + this.selectedMeal.youtubeCode" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-    <div v-else class="meal-info-img">
-      <img :src="this.selectedMeal.strMealThumb" />
-    </div>
-    <div class="meal-details">
-      <h3>Instruction</h3>
-      <p>{{ this.selectedMeal.strInstructions }}</p>
-      <h3>Ingredients + Measure</h3>
-      <div class="meal-ingr-measure">
-        <ul v-if="this.selectedMeal.idMeal !== ''">
-          <li v-for="(value, index) in selectedMeal.ingredients" :key="index">{{ value }}</li>
-        </ul>
-        <ul v-if="this.selectedMeal.idMeal !== ''">
-          <li v-for="(value, index) in selectedMeal.measure" :key="index">{{ value }}</li>
-        </ul>
+  <div class="modal">
+    <div class="information">
+      <div v-if="this.selectedMeal.youtubeCode !== null">
+        <iframe width="300" height="300" :src="'https://www.youtube.com/embed/' + this.selectedMeal.youtubeCode" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
+      <div v-else class="meal-info-img">
+        <img :src="this.selectedMeal.strMealThumb" />
+      </div>
+      <div class="meal-details">
+        <h3>Instruction</h3>
+        <p>{{ this.selectedMeal.strInstructions }}</p>
+        <h3>Ingredients + Measure</h3>
+        <div class="meal-ingr-measure">
+          <ul v-if="this.selectedMeal.idMeal !== ''">
+            <li v-for="(value, index) in selectedMeal.ingredients" :key="index">{{ value }}</li>
+          </ul>
+          <ul v-if="this.selectedMeal.idMeal !== ''">
+            <li v-for="(value, index) in selectedMeal.measure" :key="index">{{ value }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="close" @click="$emit('closeModal')" />
     </div>
   </div>
 </template>
@@ -37,15 +40,31 @@ export default {
 <style lang="scss" scoped>
   @import '../styles/colors';
 
+  .modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3)
+  }
+
   .information {
     width: 100%;
+    max-width: 60vw;
     border: 1px solid $gray;
-    margin: 20px;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-flow: row;
     align-items: center;
+    background-color: $white;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.4);
+    position: relative;
 
     .meal-info-img {
       width: 300px;
@@ -76,6 +95,33 @@ export default {
           margin-right: 20px;
         }
       }
+    }
+  }
+
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    height: 20px;
+    width: 20px;
+    padding-top: 10px;
+    cursor: pointer;
+
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background-color: $black;
+    }
+
+    &::before {
+      transform: rotate(-45deg);
+    }
+
+    &::after {
+      transform: rotate(45deg);
     }
   }
 </style>

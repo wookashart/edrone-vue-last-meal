@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="navigationWrapper">
-      <div class="content">
+      <div class="content homeContent">
         <div class="hamburger-bar">
           <div>
             <i class="fas fa-bars"></i>
@@ -86,6 +86,10 @@ export default {
     display: flex;
   }
 
+  .homeContent {
+    align-items: center;
+  }
+
   .hamburger-bar {
     flex: 1;
     font-size: 2.8rem;
@@ -96,7 +100,7 @@ export default {
     flex: 2;
     align-self: center;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.7rem;
     padding: 0 15px;
 
     label {
@@ -123,12 +127,17 @@ export default {
   .favourites-bar {
     flex: 1;
     padding: 0 15px;
+    height: 30px;
+    display: flex;
 
     > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       border: 1px solid $gray;
       border-radius: 4px;
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       text-transform: uppercase;
       color: $gray;
       padding: 5px;
@@ -137,6 +146,10 @@ export default {
 
       span {
         margin: 0 5px;
+
+        &:first-of-type {
+          flex: 1;
+        }
       }
     }
   }

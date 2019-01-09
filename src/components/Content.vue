@@ -12,11 +12,9 @@
             </div>
           </div>
         </li>
-          <!-- <component v-bind:is="component" :selectedMeal="selectedMeal"></component> -->
-        
-        <!-- <MealDetail :selectedMeal="selectedMeal" /> -->
       </ul>
     </div>
+    <MealDetail :selectedMeal="selectedMeal" v-if="boxClicked" @closeModal="boxClicked = false" />
   </div>
 </template>
 
@@ -59,8 +57,7 @@
             const youtubeUrl = this.results[index].strYoutube !== "" ? new URL(this.results[index].strYoutube) : null;
             const videoNumber = youtubeUrl !== null ? youtubeUrl.searchParams.get("v") : null;
 
-            
-
+            this.boxClicked = true;
             this.selectedMeal = this.results[index];
             this.selectedMeal.youtubeCode = videoNumber;
 
