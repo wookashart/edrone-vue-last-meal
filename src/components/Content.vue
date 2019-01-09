@@ -49,14 +49,11 @@
     },
     methods: {
       showDetail: function(id, index) {
-        const boxList = [...document.querySelectorAll('.item-list li')];
-        const infoBoxPosition = Math.ceil((index + 1) / 3) * 3;
         const allIngredients = [];
         const allMeasure = [];
 
         axios.get(`${findByIdAPI}?i=${id}`)
           .then(response => {
-            const allBoxes = [...document.querySelectorAll('.thumb-box')];
             const youtubeUrl = this.results[index].strYoutube !== "" ? new URL(this.results[index].strYoutube) : null;
             const videoNumber = youtubeUrl !== null ? youtubeUrl.searchParams.get("v") : null;
 
