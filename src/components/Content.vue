@@ -73,35 +73,6 @@
 
             this.selectedMeal.ingredients = allIngredients;
             this.selectedMeal.measure = allMeasure;
-
-            // if (document.querySelector('.information')) {
-            //   document.querySelector('.information').remove();
-            //   boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
-            //   document.querySelector('.item-list > div').classList.add('information');
-            // } else {
-            //   boxList[infoBoxPosition - 1] !== undefined ? boxList[infoBoxPosition - 1].after(box) : boxList[boxList.length - 1].after(box);
-            //   document.querySelector('.item-list > div').classList.add('information');
-            // }
-            
-
-            // this.mealDetail = response.data.meals[0];
-            // this.boxClicked = !this.boxClicked;
-
-            // if (this.boxClicked) {
-              // allBoxes.map(box => {
-              //   box.style.opacity = "0.5";
-              // })
-              // document.getElementsByClassName(id)[0].style.opacity = "1";
-            // } else {
-            //   allBoxes.map(box => {
-            //     box.style.opacity = "1";
-            //   })
-            // }
-
-            
-
-            
-            
           })
           .catch(err => {
             console.log(err);

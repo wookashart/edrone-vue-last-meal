@@ -5,9 +5,14 @@
         <h3>Category</h3>
         <div>
           <ul>
-            <li>Vegetarian</li>
-            <li>Food</li>
-            <li>Deser</li>
+            <li v-for="(item, index) in this.tagging.uniqueCategory" :key="index">
+              <div v-if="item">
+                <span class="cancel-tag" @click="$emit('categoryCancel', item)">
+                  <i class="fas fa-times-circle"></i>
+                </span>
+                <span>{{ item }}</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -15,9 +20,14 @@
         <h3>Area</h3>
         <div>
           <ul>
-            <li>Poland</li>
-            <li>Cracov</li>
-            <li>Berlin</li>
+            <li v-for="(item, index) in this.tagging.uniqueArea" :key="index">
+              <div v-if="item">
+                <span class="cancel-tag" @click="$emit('areaCancel', item)">
+                  <i class="fas fa-times-circle"></i>
+                </span>
+                <span>{{ item }}</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -25,9 +35,14 @@
         <h3>Tags</h3>
         <div>
           <ul>
-            <li>Vegetarian</li>
-            <li>Food</li>
-            <li>Poland</li>
+            <li v-for="(item, index) in this.tagging.uniqueTags" :key="index">
+              <div v-if="item">
+                <span class="cancel-tag" @click="$emit('tagCancel', item)">
+                  <i class="fas fa-times-circle"></i>
+                </span>
+                <span>{{ item }}</span>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -38,6 +53,12 @@
 <script>
 export default {
   name: 'Aside',
+  props: {
+    tagging: {
+      type: Object,
+      required: true,
+    }
+  },
 }
 </script>
 
@@ -67,12 +88,25 @@ export default {
         li {
           display: inline-block;
           font-size: 1.2rem;
-          background-color: white;
-          padding: 5px;
-          text-transform: uppercase;
-          border-radius: 6px;
-          color: $black;
           margin: 5px;
+
+          > div {
+            background-color: $white;
+            padding: 5px;
+            text-transform: uppercase;
+            border-radius: 6px;
+            color: $black;
+          }
+
+          span {
+            display: inline-block;
+          }
+
+          .cancel-tag {
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+          }
         }
       }
     }

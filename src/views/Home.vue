@@ -22,7 +22,12 @@
       </div>
     </div>
     <div class="content main-box">
-      <Aside />
+      <Aside 
+        :tagging="tagging"
+        @categoryCancel="categoryCancel"
+        @areaCancel="areaCancel"
+        @tagCancel="tagCancel"
+      />
       <Content :results="results" />
     </div>
   </div>
@@ -44,6 +49,7 @@ export default {
     return {
       searchValue: '',
       results: [],
+      tagging: {},
     }
   },
   components: {
@@ -55,17 +61,93 @@ export default {
       axios.get(this.searchValue !== '' ? `${searchAPI}?s=${this.searchValue}` : latestMealsAPI)
         .then(response => {
           this.results = response.data.meals;
+
+          this.setTagging();
         })
         .catch(err => {
           console.log(err);
         });
-    }, 500)
+    }, 500),
+    setTagging() {
+      const area = [];
+      const category = [];
+      let tags = [];
+
+      this.results.map(el => {
+        area.push(el.strArea);
+        category.push(el.strCategory);
+        el.strTags !== null ? tags.push(el.strTags) : false;
+      });
+      tags = tags.join().split(',').sort();
+
+      let uniqueCategory = category.filter((elem, index, self) => {
+          return index == self.indexOf(elem);
+      });
+
+      let uniqueArea = area.filter((elem, index, self) => {
+          return index == self.indexOf(elem);
+      });
+
+      let uniqueTags = tags.filter((elem, index, self) => {
+          return index == self.indexOf(elem);
+      });
+
+      uniqueCategory = uniqueCategory.sort();
+      uniqueArea = uniqueArea.sort();
+
+      this.tagging = {
+        uniqueArea,
+        uniqueCategory,
+        uniqueTags,
+      };
+    },
+    categoryCancel(value) {
+      const newResults = [];
+
+      this.results.map(el => {
+        if (el.strCategory !== value) {
+          newResults.push(el);
+        }
+      });
+
+      this.results = newResults;
+      this.setTagging();
+    },
+    areaCancel(value) {
+      const newResults = [];
+
+      this.results.map(el => {
+        if (el.strArea !== value) {
+          newResults.push(el);
+        }
+      });
+
+      this.results = newResults;
+      this.setTagging();
+    },
+    tagCancel(value) {
+      const newResults = [];
+
+      this.results.map(el => {
+
+        if (el.strTags === null || el.strTags.search(value) === -1) {
+          newResults.push(el);
+        }
+      });
+
+      this.results = newResults;
+
+      // console.log(this.results);
+      this.setTagging();
+    },
   },
 
   beforeMount() {
     axios.get(latestMealsAPI)
       .then(response => {
         this.results = response.data.meals;
+
+        this.setTagging();
       })
       .catch(err => {
         console.log(err);
@@ -76,6 +158,7 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/colors';
+  @import '../styles/mixins';
 
   .navigationWrapper {
     background-color: $yellow;
