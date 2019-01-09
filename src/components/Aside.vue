@@ -64,10 +64,29 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/colors';
+  @import '../styles/mixins';
 
   .asideWrapper {
     background-color: $gray_dark;
-    flex: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    z-index: 10;
+    transform: translateX(-100%);
+    transition: 0.12s transform ease;
+
+    @include media(desktop) {
+      flex: 1;
+      position: static;
+      transform: none;
+      transition: 0s;
+    }
+
+    &.open {
+      transform: translateX(0);
+    }
   }
 
   .tags-box {

@@ -6,7 +6,6 @@
 
 <style lang="scss">
   @import './styles/colors';
-  @import './styles/mixins';
 
   * {
     box-sizing: border-box;

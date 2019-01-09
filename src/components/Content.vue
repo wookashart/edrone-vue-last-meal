@@ -11,6 +11,9 @@
               <p>{{ item.strMeal }}</p>
             </div>
           </div>
+          <span class="add-to-favourite">
+            <i class="far fa-heart"></i>
+          </span>
         </li>
       </ul>
     </div>
@@ -84,6 +87,7 @@
 
 <style lang="scss" scoped>
   @import '../styles/colors';
+  @import '../styles/mixins';
 
   .contentWrapper {
     flex: 3;
@@ -99,8 +103,17 @@
     padding: 0 15px;
 
     li {
-      width: calc(100% / 3);
+      width: 100%;
       padding: 20px;
+      position: relative;
+
+      @include media(tablet) {
+        width: calc(100% / 2);
+      }
+
+      @include media(desktop) {
+        width: calc(100% / 3);
+      }
     }
 
     .thumb-box {
@@ -135,6 +148,16 @@
         padding: 15px 5px;
         text-transform: uppercase;
       }
+    }
+
+    .add-to-favourite {
+      position: absolute;
+      top: 185px;
+      right: 30px;
+      color: $white;
+      font-size: 2.4rem;
+      z-index: 9;
+      cursor: pointer;
     }
   }
 </style>

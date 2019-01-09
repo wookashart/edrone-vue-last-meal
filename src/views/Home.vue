@@ -3,7 +3,7 @@
     <div class="navigationWrapper">
       <div class="content homeContent">
         <div class="hamburger-bar">
-          <div>
+          <div @click="hamburgerClicked = !hamburgerClicked">
             <i class="fas fa-bars"></i>
           </div>
         </div>
@@ -22,7 +22,8 @@
       </div>
     </div>
     <div class="content main-box">
-      <Aside 
+      <Aside
+        :class="{ 'open' : hamburgerClicked }"
         :tagging="tagging"
         @categoryCancel="categoryCancel"
         @areaCancel="areaCancel"
@@ -50,6 +51,7 @@ export default {
       searchValue: '',
       results: [],
       tagging: {},
+      hamburgerClicked: false,
     }
   },
   components: {
@@ -137,7 +139,6 @@ export default {
 
       this.results = newResults;
 
-      // console.log(this.results);
       this.setTagging();
     },
   },
@@ -174,9 +175,17 @@ export default {
   }
 
   .hamburger-bar {
-    flex: 1;
     font-size: 2.8rem;
-    padding: 0 15px;
+    padding: 0 10px;
+
+    @include media(desktop) {
+      flex: 1;
+      padding: 0 15px;
+
+      > div {
+        display: none;
+      }
+    }
   }
 
   .search-bar {
@@ -184,7 +193,11 @@ export default {
     align-self: center;
     text-align: center;
     font-size: 1.7rem;
-    padding: 0 15px;
+    padding: 0 10px;
+
+    @include media(desktop) {
+      padding: 0 15px;
+    }
 
     label {
       color: $gray;
@@ -204,14 +217,19 @@ export default {
       background: transparent;
       outline: none;
       border-radius: 0 4px 4px 0;
+      color: $gray;
     }
   }
 
   .favourites-bar {
-    flex: 1;
-    padding: 0 15px;
+    padding: 0 10px;
     height: 30px;
     display: flex;
+
+    @include media(desktop) {
+      flex: 1;
+      padding: 0 15px;
+    }
 
     > div {
       display: flex;
@@ -232,6 +250,11 @@ export default {
 
         &:first-of-type {
           flex: 1;
+          display: none;
+
+          @include media(desktop) {
+            display: inline-block;
+          }
         }
       }
     }
@@ -239,5 +262,19 @@ export default {
 
   .main-box {
     display: flex;
+    position: relative;
+  }
+
+  @include media(desktop) {
+    .leftSidebar-enter-active,
+    .leftSidebar-leave-active {
+      transform: translateX(0);
+      transition: 0.12s ease;
+    }
+
+    .leftSidebar-enter,
+    .leftSidebar-leave-to {
+      transform: translateX(-100%);
+    }
   }
 </style>
