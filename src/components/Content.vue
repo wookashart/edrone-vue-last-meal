@@ -11,7 +11,7 @@
               <p>{{ item.strMeal }}</p>
             </div>
           </div>
-          <span class="add-to-favourite">
+          <span class="add-to-favourite" @click="addToFavourite(item)" v-if="!item.inFavourite">
             <i class="far fa-heart"></i>
           </span>
         </li>
@@ -77,6 +77,21 @@
           .catch(err => {
             console.log(err);
           })
+      },
+      addToFavourite(item) {
+        const storedFavourites = JSON.parse(localStorage.getItem('favouriteMeals')) !== null
+          ? JSON.parse(localStorage.getItem('favouriteMeals'))
+          : [];
+        const newItem = {
+          id: item.idMeal,
+          thumb: item.strMealThumb,
+          title: item.strMeal,
+        };
+
+        storedFavourites.push(newItem);
+
+        localStorage.setItem('favouriteMeals', JSON.stringify(storedFavourites));
+        this.$emit('refreshData');
       }
     },
   }
@@ -155,6 +170,12 @@
       font-size: 2.4rem;
       z-index: 9;
       cursor: pointer;
+      transition: 0.12s transform linear;
+      transform-origin: center;
+
+      &:hover {
+        transform: scale(1.2);
+      }
     }
   }
 </style>

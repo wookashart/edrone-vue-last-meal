@@ -14,9 +14,21 @@
           <input name="search" id="search" placeholder="SEARCH" v-model="searchValue" @input="handleInput" />
         </div>
         <div class="favourites-bar">
-          <div>
+          <div class="favourites-button" @click="favouriteOpen = !favouriteOpen">
             <span>Favourites</span>
             <span><i class="far fa-heart"></i></span>
+          </div>
+          <div class="favourites-list" :class="{ 'open' : favouriteOpen }">
+            <ul>
+              <li v-for="(item, index) in favourite" :key="index">
+                <a href="#" @click="e => searchFavourite(e, item.id)">
+                  <span class="favourite-thumbnail">
+                    <img :src="item.thumb" />
+                  </span>
+                  <span class="favourite-title">{{ item.title }}</span>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -29,7 +41,7 @@
         @areaCancel="areaCancel"
         @tagCancel="tagCancel"
       />
-      <Content :results="results" />
+      <Content :results="results" @refreshData="handleInput" />
     </div>
   </div>
 </template>
@@ -43,6 +55,7 @@ import debounce from 'lodash.debounce';
 
 const searchAPI = 'https://www.themealdb.com/api/json/v1/1/search.php';
 const latestMealsAPI = 'https://www.themealdb.com/api/json/v1/1/latest.php';
+const findByIdAPI = 'https://www.themealdb.com/api/json/v1/1/lookup.php';
 
 export default {
   name: 'home',
@@ -52,6 +65,8 @@ export default {
       results: [],
       tagging: {},
       hamburgerClicked: false,
+      favourite: [],
+      favouriteOpen: false,
     }
   },
   components: {
@@ -60,8 +75,19 @@ export default {
   },
   methods: {
     handleInput: debounce(function() {
+      this.favourite = JSON.parse(localStorage.getItem('favouriteMeals'));
       axios.get(this.searchValue !== '' ? `${searchAPI}?s=${this.searchValue}` : latestMealsAPI)
         .then(response => {
+          if (this.favourite !== null) {
+            response.data.meals.map(meal => {
+              this.favourite.map(fav => {
+                if (meal.idMeal === fav.id) {
+                  meal.inFavourite = true;
+                };
+              });
+            });
+          };
+          
           this.results = response.data.meals;
 
           this.setTagging();
@@ -141,11 +167,47 @@ export default {
 
       this.setTagging();
     },
+    searchFavourite(e, id) {
+      e.preventDefault();
+
+      axios.get(`${findByIdAPI}?i=${id}`)
+        .then(response => {
+          if (this.favourite !== null) {
+            response.data.meals.map(meal => {
+              this.favourite.map(fav => {
+                if (meal.idMeal === fav.id) {
+                  meal.inFavourite = true;
+                };
+              });
+            });
+          }
+
+          this.results = response.data.meals;
+
+          this.favouriteOpen = false;
+          this.setTagging();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
   },
 
   beforeMount() {
+    this.favourite = JSON.parse(localStorage.getItem('favouriteMeals'));
+
     axios.get(latestMealsAPI)
       .then(response => {
+        if (this.favourite !== null) {
+          response.data.meals.map(meal => {
+            this.favourite.map(fav => {
+              if (meal.idMeal === fav.id) {
+                meal.inFavourite = true;
+              };
+            });
+          });
+        }
+
         this.results = response.data.meals;
 
         this.setTagging();
@@ -229,9 +291,10 @@ export default {
     @include media(desktop) {
       flex: 1;
       padding: 0 15px;
+      position: relative;
     }
 
-    > div {
+    .favourites-button {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -244,6 +307,7 @@ export default {
       padding: 5px;
       text-align: center;
       cursor: pointer;
+      transition: 0.1s linear;
 
       span {
         margin: 0 5px;
@@ -255,6 +319,98 @@ export default {
           @include media(desktop) {
             display: inline-block;
           }
+        }
+      }
+
+      &:hover {
+        color: $black;
+        font-weight: 700;
+      }
+    }
+
+    .favourites-list {
+      position: absolute;
+      left: 0;
+      top: 50px;
+      width: 100%;
+      background-color: $white;
+      z-index: 10;
+      border: 1px solid $gray;
+      border-radius: 4px;
+      transition: 0.12s transform ease;
+      transform: translateX(100%);
+
+      @include media(desktop) {
+        transform: scaleY(0);
+        transform-origin: top;
+        top: 30px;
+        left: 15px;
+        width: calc(100% - 30px);
+        border-top: 0;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+          a {
+            display: block;
+            padding: 5px 10px;
+
+            .favourite-thumbnail {
+              display: inline-block;
+              position: relative;
+              width: 30%;
+              height: 40px;
+              overflow: hidden;
+              vertical-align: middle;
+
+              @include media(tablet) {
+                height: 60px;
+              }
+              
+              @include media(desktop) {
+                height: 40px;
+              }
+
+              img {
+                max-width: 100%;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+              }
+            }
+
+            .favourite-title {
+              display: inline-block;
+              width: 70%;
+              padding-left: 10px;
+              font-size: 1.2rem;
+              vertical-align: middle;
+              color: $gray;
+              text-transform: uppercase;
+              transition: 0.1s linear;
+            }
+
+            &:hover {
+              .favourite-title {
+                color: $black;
+                font-weight: 700;
+              }
+            }
+          }
+        }
+      }
+
+      &.open {
+        transform: translateX(0);
+
+        @include media(desktop) {
+          transform: scaleY(1);
         }
       }
     }
