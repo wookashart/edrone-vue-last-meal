@@ -338,11 +338,10 @@ export default {
       border: 1px solid $gray;
       border-radius: 4px;
       transition: 0.12s transform ease;
-      transform: translateX(100%);
+      transform: scaleY(0);
+      transform-origin: top;
 
       @include media(desktop) {
-        transform: scaleY(0);
-        transform-origin: top;
         top: 30px;
         left: 15px;
         width: calc(100% - 30px);
@@ -407,11 +406,7 @@ export default {
       }
 
       &.open {
-        transform: translateX(0);
-
-        @include media(desktop) {
-          transform: scaleY(1);
-        }
+        transform: scaleY(1);
       }
     }
   }

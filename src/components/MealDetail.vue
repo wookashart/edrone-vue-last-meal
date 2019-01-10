@@ -39,6 +39,7 @@ export default {
 
 <style lang="scss" scoped>
   @import '../styles/colors';
+  @import '../styles/mixins';
 
   .modal {
     position: fixed;
@@ -52,33 +53,49 @@ export default {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.3);
     z-index: 99999;
+    overflow-y: scroll;
   }
 
   .information {
     width: 100%;
-    max-width: 60vw;
     border: 1px solid $gray;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
-    flex-flow: row;
+    flex-flow: column;
     align-items: center;
     background-color: $white;
     box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.4);
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 45px;
+
+    @include media(desktop) {
+      max-width: 60vw;
+      flex-flow: row;
+      position: relative;
+      padding-top: 0;
+    }
 
     .meal-info-img {
       width: 300px;
+      height: 100px;
       position: relative;
 
       img {
         max-width: 300px;
+        height: 100px;
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
         margin: auto;
+      }
+
+      @include media(desktop) {
+        height: auto;
       }
     }
 
